@@ -12,7 +12,7 @@ defualt: all
 all: Linklist
 
 # Compile .c files
-Heap: linklist.c
+Linklist: linklist.c
 	$(GCC) $(GCC_FLAGS) $< -o $@
 
 # Clean up the directory
