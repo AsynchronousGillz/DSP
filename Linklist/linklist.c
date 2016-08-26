@@ -10,15 +10,13 @@ typedef struct node {
 
 typedef struct list {
 	struct node *head;
-	struct node *tail;
 	int length;
 } list_t;
 
 //init Linklist
 list_t* initList() {
-	list_t* ret = malloc(sizeof(list_t*));
+	list_t* ret = malloc(sizeof(list_t));
 	ret->head = NULL;
-	ret->tail = NULL;
 	ret->length = 0;
 	return ret;
 }
@@ -29,20 +27,25 @@ void clearList(list_t* l, int mode) {
 	node_t *temp = NULL;
 	for(node_t *ptr = l->head; ptr != NULL; ptr = ptr->next) {        
 		if (temp != NULL) {
+			free(temp->data);
 			free(temp);
 			temp = NULL;
 		}
 		temp = ptr;
 	}
+	if (temp != NULL) {
+		free(temp->data);
+		free(temp);
+		temp = NULL;
+	}
 	l->head = NULL;
-	l->tail = NULL;
 	l->length = 0;
 	if (mode != 0) free(l);
 }
 
 //print theee node
 void printLink(node_t* ptr) {
-	printf("(%d,%s) ",ptr->key, ptr->data);
+	if (ptr->data) printf("(%d,%s) ",ptr->key, ptr->data);
 }
 
 //display the list
@@ -61,7 +64,10 @@ void insert(list_t* l, int key, char* data) {
 	node_t *link = malloc(sizeof(node_t));
 
 	link->key = key;
-	link->data = data;
+
+	int strle = sizeof(char)*(strlen(data) + 1);
+	link->data = malloc(strle);
+	memcpy(link->data, data, strle);
 
 	//point it to old first node
 	link->next = l->head;
@@ -100,9 +106,7 @@ node_t* find(list_t* l, int key) {
 	//start from the first link
 	for (; current->key != key; current = current->next) {
 		//if it is last node
-		if(current->next == NULL){
-			return NULL;
-		} 
+		if(current->next == NULL) return NULL;
 	}      
 
 	//if data found, return the current Link
@@ -110,7 +114,12 @@ node_t* find(list_t* l, int key) {
 }
 
 //delete first item
-node_t* deleteTop(list_t* l) {
+void deleteTop(list_t* l) {
+
+	//if list is empty
+	if(l->head == NULL) {
+		return;
+	}
 
 	//save reference to first link
 	node_t *tempLink = l->head;
@@ -119,12 +128,12 @@ node_t* deleteTop(list_t* l) {
 	//mark next to first link as first 
 	l->head = tempLink->next;
 
-	//return the deleted link
-	return tempLink;
+	//free the link
+	free(tempLink);
 }
 
 //delete a link with given key
-node_t* deleteKey(list_t* l, int key) {
+void deleteKey(list_t* l, int key) {
 
 	//start from the first link
 	node_t* current = l->head;
@@ -132,7 +141,7 @@ node_t* deleteKey(list_t* l, int key) {
 
 	//if list is empty
 	if(l->head == NULL) {
-		return NULL;
+		return;
 	}
 
 	//navigate through list
@@ -140,7 +149,7 @@ node_t* deleteKey(list_t* l, int key) {
 
 		//if it is last node
 		if (current->next == NULL){
-			return NULL;
+			return;
 		} else {
 			//store reference to current link
 			previous = current;
@@ -159,7 +168,8 @@ node_t* deleteKey(list_t* l, int key) {
 		previous->next = current->next;
 	}    
 
-	return current;
+	free(current->data);
+	free(current);
 }
 
 //sort the linklist
