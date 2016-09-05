@@ -57,7 +57,7 @@ void display(str_t *st) {
 	for(node_t *s = st->top; s !=NULL; s = s->nxt) {
 		printf("  [ %3d ]  \n",s->value);
 	}
-	printf("===========\n") ;
+	printf("===========\n\n") ;
 }
 
 int main(int argc, char **argv) {
@@ -83,6 +83,12 @@ int main(int argc, char **argv) {
 
 	display(s);
 
+	pop(s);
+	pop(s);
+
+	display(s);
+
+	clearStack(s);
 	printf("%s: exiting.\n", argv[0]);
 	return(0);
 }

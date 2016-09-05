@@ -4,21 +4,18 @@
 GCC             = gcc
 GCC_FLAGS       = -g -std=c99 -Wall -O0
 
-EXE 			= Alpha Beta Omega
+EXE 			= Stack min-Stack
 
 defualt: all
 
 # Target is the executable
-all: Alpha Beta Omega
+all: Stack min-Stack
 
 # Compile .c files
-Alpha: alpha.c
+Stack: stack.c
 	$(GCC) $(GCC_FLAGS) $< -o $@
 
-Beta: beta.c
-	$(GCC) $(GCC_FLAGS) $< -o $@
-
-Omega: omega.c
+min-Stack: min-stack.c
 	$(GCC) $(GCC_FLAGS) $< -o $@
 
 # Clean up the directory
